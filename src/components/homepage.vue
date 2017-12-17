@@ -1,11 +1,31 @@
 <template>
+	<div>
 	<el-row>
 		<h3>This is the homepage.</h3>
 	</el-row>
+
+	<el-button type="primary" @click="getData">获取数据</el-button>
+</div>
 </template>
 
 <script>
+import {doSomethingAPI} from '../util/mock';
+
 export default {
+	data() {
+		return {
+		}
+	},
+	methods: {
+		getData: function() {
+			this.$axios.get(`/some`)
+			.then(resp => {
+				console.log(resp);
+			}).catch(error => {
+				console.log(error);
+			});
+		}
+	}
 }
 </script>
 

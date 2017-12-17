@@ -6,13 +6,24 @@
     		<el-row class="main-topbar">
     			<h2>Jonas的后台页面</h2>
     		</el-row>
+    		<el-button type="primary" plain @click="logout">退出</el-button>
     		<router-view></router-view>
     	</div>
 	</div>
 </template>
 
 <script>
+import OAuth from '@/oauth';
+
+let oAuth = new OAuth();
+
 export default {
+	methods: {
+		logout() {
+			oAuth.logout();
+			this.$router.push({ path: '/login' });
+		}
+	}
 }
 </script>
 
