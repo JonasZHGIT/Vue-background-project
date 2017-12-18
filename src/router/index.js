@@ -11,7 +11,6 @@ import OAuth from '@/oauth';
 
 let oAuth = new OAuth(); 
 
-
 Vue.use(Router);
 Vue.use(ElementUI);
 

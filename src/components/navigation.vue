@@ -3,10 +3,10 @@
 		<div class="main-sidebar">
 		</div>
     	<div class="main-rightside">
-    		<el-row class="main-topbar">
+    		<el-row type="flex" class="main-topbar" justify="space-between">
     			<h2>Jonas的后台页面</h2>
+    			<el-button type="primary" plain @click="logout" size="small">退出</el-button>
     		</el-row>
-    		<el-button type="primary" plain @click="logout">退出</el-button>
     		<router-view></router-view>
     	</div>
 	</div>
@@ -50,4 +50,12 @@ export default {
 .main-topbar h2 {
 	padding-left: 2em;
 }
+.main-topbar button {
+	margin-right: 2em;
+}
 </style>
+
+
+
+
+

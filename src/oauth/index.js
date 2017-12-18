@@ -15,7 +15,6 @@ class OAuth {
     getAuthHeaders() {
     	let access_token = this.getCookie('access_token');
     	return access_token;
-    	// Axios.defaults.headers.common['Authorization'] = access_token;
     }
 
     // cookie 方法
