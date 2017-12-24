@@ -11,15 +11,18 @@ let oAuth = new OAuth();
 Vue.prototype.$oauth = oAuth;
 
 const axios = Axios.create({
-	baseURL: process.env.API_ROOT
+	// ajax请求baseurl修改
+	// baseURL: process.env.API_ROOT
+	baseURL: ''
 });
-axios.interceptors.request.use(function (config) {
-    config.headers.common['Authorization'] = oAuth.getAuthHeaders();
-    return config;
-}, function (error) {
-    console.log(error);
-    return Promise.reject(error);
-});
+// 后台页面浏览认证
+// axios.interceptors.request.use(function (config) {
+//     config.headers.common['Authorization'] = oAuth.getAuthHeaders();
+//     return config;
+// }, function (error) {
+//     console.log(error);
+//     return Promise.reject(error);
+// });
 
 Vue.prototype.$axios = axios;
 

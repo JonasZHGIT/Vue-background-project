@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {loginAPI} from '../util/mock';
+import {loginAPI} from '../../util/mock';
 import OAuth from '@/oauth';
 
 let oAuth = new OAuth();
@@ -45,11 +45,10 @@ export default {
 }
 </script>
 
-<style>
-.login-group {
-	padding: 10em 0;
-}
-.login-input, .login-btn {
-	width: 15em;
-}
+<style lang="stylus">
+.login-group
+    padding 10em 0
+.login-input,
+.login-btn
+    width 15em
 </style>

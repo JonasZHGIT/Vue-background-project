@@ -13,14 +13,12 @@ export default {
 }
 </script>
 
-<style>
-.login-topbar {
-	display: flex;
-	align-items: center;
-	height: 3em;
-	border-bottom: 1px solid rgb(230, 233, 240);
-}
-.login-topbar h2 {
-	padding-left: 2em;
-}
+<style lang="stylus">
+.login-topbar
+	display flex
+	align-items center
+	height 3em
+	border-bottom 1px solid rgb(230, 233, 240)
+	& h2
+		padding-left 2em
 </style>

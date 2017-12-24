@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {doSomethingAPI} from '../util/mock';
+import {doSomethingAPI} from '../../util/mock';
 
 export default {
 	data() {
