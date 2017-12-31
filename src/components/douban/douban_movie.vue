@@ -3,53 +3,91 @@
 		<div class="movie-onshow-container">
 			<div class="movie-onshow-title">
 				<div>
-    				<h3>正在热映</h3>
+    				<h3>&nbsp;&nbsp;正在热映</h3>
     				<router-link to='/douban/movie'>全部正在热映<i class="el-icon-d-arrow-right"></i></router-link>
     				<router-link to='/douban/movie'>即将上映<i class="el-icon-d-arrow-right"></i></router-link>
     			</div>
 			</div>
 			<div class="movie-onshow-carousel">
-				<el-carousel height="240px" trigger="click" :interval="10000">
+				<el-carousel height="240px" trigger="click" :interval="10000" :autoplay="false">
                     <el-carousel-item v-for="item in totalPage" :key="item">
                     	<div class="carousel-single" v-for="n in 6" :key="n" :class="{ishidden: !slideLists[6*(item-1) + n - 1].image}">
-                        	<img :src="slideLists[6*(item-1) + n - 1].image">
-                        	<p>{{slideLists[6*(item-1) + n - 1].name}}</p>
-                        	<p class="carousel-rate"><span :class="slideLists[6*(item-1) + n - 1].starRate"></span>{{slideLists[6*(item-1) + n - 1].rate}}</p>
+                        	<img :src="slideLists[6*(item-1) + n - 1].image" @mouseover="showPop(6*(item-1) + n - 1)" @mouseleave="showPop(-1)">
+                        	<p class="carousel-detail">&nbsp;{{slideLists[6*(item-1) + n - 1].name}}</p>
+                        	<p class="carousel-rate carousel-detail"><span :class="slideLists[6*(item-1) + n - 1].starRate"></span>{{slideLists[6*(item-1) + n - 1].rate}}</p>
+                        	<div class="movie-popover" :class="[n === 5 || n === 6?'movie-popover-right':'movie-popover-left', {isshown: showStatus === 6*(item-1) + n - 1}]">
+                        		<h4>{{slideLists[6*(item-1) + n - 1].name}}<span class="movie-onshow-year">{{slideLists[6*(item-1) + n - 1].year}}</span></h4>
+                        		<div class="carousel-rate"><span :class="slideLists[6*(item-1) + n - 1].starRate"></span>{{slideLists[6*(item-1) + n - 1].rate}}</div>
+                        		<p>导演<span v-for="(director, index) in slideLists[6*(item-1) + n - 1].director" :key="index">{{director.name}}</span></p>
+                        		<p>主演<span v-for="(cast, index) in slideLists[6*(item-1) + n - 1].cast" :key="index">{{cast.name}}</span></p>
+                        	</div>
                         </div>
                     </el-carousel-item>
                 </el-carousel>
 			</div>
 		</div>
+
+		<div class="movie-onshow-container">
+			<div class="movie-onshow-title">
+				<div>
+    				<h3>&nbsp;&nbsp;豆瓣TOP250影片</h3>
+    			</div>
+			</div>
+			<div class="movie-onshow-carousel">
+				<el-carousel height="480px" trigger="click" :autoplay="false">
+                    <el-carousel-item v-for="item_top in 5" :key="item_top">
+                    	<div class="carousel-single" v-for="m in 12" :key="m">
+                        	<img :src="slideTops[12*(item_top-1) + m - 1].image" @mouseover="showPopTop(6*(item_top-1) + m - 1)" @mouseleave="showPopTop(-1)">
+                        	<p class="carousel-detail">&nbsp;{{slideTops[12*(item_top-1) + m - 1].name}}</p>
+                        	<p class="carousel-rate carousel-detail">{{slideTops[12*(item_top-1) + m - 1].rate}}</p>
+                        	<div class="movie-popover" :class="[m === 5 || m === 6 || m === 11 || m === 12?'movie-popover-right':'movie-popover-left', {isshown: showStatusTop === 12*(item_top-1) + m - 1}]">
+                        		<h4>{{slideTops[12*(item_top-1) + m - 1].name}}<span class="movie-onshow-year">{{slideTops[12*(item_top-1) + m - 1].year}}</span></h4>
+                        		<div class="carousel-rate"><span :class="slideTops[12*(item_top-1) + m - 1].starRate"></span>{{slideTops[12*(item_top-1) + m - 1].rate}}</div>
+                        		<p>导演<span v-for="(director, index) in slideTops[12*(item_top-1) + m - 1].director" :key="index">{{director.name}}</span></p>
+                        		<p>主演<span v-for="(cast, index) in slideTops[12*(item_top-1) + m - 1].cast" :key="index">{{cast.name}}</span></p>
+                        	</div>
+                        	<br />
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
+			</div>
+		</div>
+
 	</div>
 </template>
 
 <script>
 export default {
 	created: function() {
-		this.$nextTick(() => {
-			this.getOnShowing();
-		});
+		this.getOnShowing();
+		this.getTop();
 	},
 	data() {
 		return {
 			curPage: '1',
 			totalPage: '',
+			totalTop: '',
 			slideLists: [],
-			currentIndex: 0
+			slideTops: [],
+			currentIndex: 0,
+			showStatus: -1,
+			showStatusTop: -1
 		}
 	},
 	methods: {
 		getOnShowing: function() {
 			this.$axios.get('/douban_api/movie/in_theaters?city=上海')
         	.then(resp => {
-        		console.log(resp);
-        		let res = resp.data;
-        		this.totalPage = Math.ceil(res.subjects.length / 6);
-        		for(let i=0; i<res.subjects.length; i++) {
+        		let res = resp.data.subjects;
+        		this.totalPage = Math.ceil(res.length / 6);
+        		for(let i=0; i<res.length; i++) {
         			let oRes = {};
-       				oRes.image = res.subjects[i].images.small;
-       				oRes.name = res.subjects[i].original_title;
-       				oRes.rate = res.subjects[i].rating.average;
+       				oRes.image = res[i].images.small;
+       				oRes.name = res[i].original_title;
+       				oRes.rate = res[i].rating.average;
+       				oRes.year = res[i].year;
+       				oRes.director = [...res[i].directors];
+       				oRes.cast = [...res[i].casts];
        				if(oRes.rate === 0) {
        					oRes.starRate = '';
        					oRes.rate = '暂无评分';
@@ -79,12 +117,38 @@ export default {
        				oRes.rate = (oRes.rate + '').length === 1?oRes.rate + '.0':oRes.rate;
        				this.slideLists.push(oRes);
         		}
-        		for(let i=0; i<6 - res.subjects.length % 6; i++) {
+        		for(let i=0; i<6 - res.length % 6; i++) {
         			this.slideLists.push({});
         		}
         	}).catch(error => {
         		console.log(error);
         	});
+		},
+		getTop: function() {
+			this.$axios.get(`/douban_api/movie/top250?start=0&count=60`)
+			.then(resp => {
+				let res = resp.data.subjects;
+				for (let i=0; i<res.length; i++) {
+					let oRes = {};
+					oRes.image = res[i].images.small;
+					oRes.name = res[i].title;
+					oRes.year = res[i].year;
+       				oRes.director = [...res[i].directors];
+       				oRes.cast = [...res[i].casts];
+					oRes.rate = res[i].rating.average;
+					oRes.rate = (oRes.rate + '').length === 1?oRes.rate + '.0':oRes.rate;
+       				this.slideTops.push(oRes);
+				}
+				console.log(resp);
+			}).catch(error => {
+				console.log(error);
+			});
+		},
+		showPop: function(n) {
+			this.showStatus = n;
+		},
+		showPopTop: function(n) {
+			this.showStatusTop = n;
 		}
 	}
 }
@@ -113,12 +177,41 @@ export default {
 	padding  1.5em 0
 	& .carousel-single
 		display inline-block
+		position relative
+		& .movie-popover-left
+			left 9em
+		& .movie-popover-right
+			left -18em
+		& .movie-popover
+			display none
+			position absolute
+			width 18em
+			height 15em
+			top 0
+			padding: 1em
+			text-align left
+			background-color #fff
+			overflow: hidden
+			z-index 10
+			& .carousel-rate
+				line-height 3em
+			& p
+				text-align left
+				line-height 2em
+				font-size: 0.12rem
+				width: 15em
+				& span
+					padding-left 1em
+			& .movie-onshow-year 
+				padding-left 1em
+				font-size 0.12rem
 	& img
 		width 8em
 		height 12em
 		overflow hidden
-		padding: 0 0.5em
-	& p
+		padding 0 0.5em
+		cursor pointer
+	& .carousel-detail
 		width 9em
 		line-height 3em
 		overflow hidden
@@ -166,6 +259,8 @@ export default {
 			background-position center -0.8em
 		& .star_10full
 			background-position center 0
+.isshown
+	display block !important
 .ishidden
 	opacity 0
 </style>
