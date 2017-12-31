@@ -39,6 +39,7 @@ $border = 1px solid rgb(230, 233, 240)
 	display flex
 	flex-direction column
 	flex-basis calc(100% - 10em)
+	padding-bottom 5em
 .main-topbar
 	display flex
 	align-items center
