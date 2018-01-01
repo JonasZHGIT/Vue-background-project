@@ -11,6 +11,7 @@ import Navigation from '@/components/main/navigation';
 import Homepage from '@/components/main/homepage';
 import Hidden from '@/components/other/hidden.vue';
 import Movie from '@/components/douban/douban_movie.vue';
+import MovieDetail from '@/components/douban/douban_movie_detail.vue';
 
 
 let oAuth = new OAuth(); 
@@ -25,6 +26,7 @@ const router = new Router({
         { path: '/nav', component: Navigation, redirect: '/home', children: [
         	{ path: '/home', component: Homepage },
         	{ path: '/douban/movie', component: Movie },
+            { path: '/douban/movie_detail/:id', component: MovieDetail },
         	{ path: '/hidden', component: Hidden }
         ]}, 
         { path: '/loginnav', component: Loginnav, redirect: '/login', children: [
