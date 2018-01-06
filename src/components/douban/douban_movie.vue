@@ -1,7 +1,16 @@
 <template>
-	<div v-if="!loading">
-		<div class="movie-container">
+	<div v-loading="loading" :class="{'movie-loading': loading}">
+		<div class="movie-container"v-if="!loading">
 			<div class="movie-onshow-container">
+				<el-col class="movie-search" :offset="10">
+					<el-input class="movie-search-input" placeholder="影片搜索" v-model="keywords" @keyup.enter.native="searchMovie">
+						<el-select v-model="searchType" slot="prepend" class="movie-search-select" @change="changeSearchType" placeholder="请选择">
+							<el-option value="1" label="关键字搜索"></el-option>
+							<el-option value="2" label="标签搜索"></el-option>
+						</el-select>
+						<el-button slot="append" icon="el-icon-search" @click="searchMovie"></el-button>
+					</el-input>
+				</el-col>
 				<div class="movie-onshow-title">
 					<div>
 						<h3>&nbsp;&nbsp;正在热映</h3>
@@ -91,6 +100,9 @@ export default {
 	data() {
 		return {
 			loading: true,
+			searchType: '1',
+			searchParams: '',
+			keywords: '',
 			totalPage: '',
 			totalPageUSA: '',
 			totalTop: '',
@@ -228,12 +240,44 @@ export default {
 		},
 		showPopUSA: function(n) {
 			this.showStatusUSA = n;
+		},
+		changeSearchType: function() {
+			this.searchParams = this.searchType === '1'?{q: this.keywords}:{tag: this.keywords}; 
+		},
+		searchMovie: function() {
+			this.changeSearchType();
+			this.$axios({
+				url: '/douban_api/movie/search',
+				method: 'get',
+				params: this.searchParams
+			}).then(resp => {
+				if(this.searchType) {
+					this.$router.push({path: `/douban/movie_search/keywords/${this.keywords}`});
+				} else {
+					this.$router.push({path: `/douban/movie_search/tag/${this.keywords}`});
+				}
+			}).catch(error => {
+				console.log(error);
+			});
 		}
 	}
 }
 </script>
 
 <style lang="stylus">
+.movie-loading
+	width 100%
+	height 100%
+.movie-onshow-container
+	& .movie-search
+		padding 1em
+	& .movie-search-input
+		width 28em
+		& .movie-search-select
+			width 10em
+.el-input-group__prepend,
+.el-input-group__append
+	background-color #fff !important
 .movie-container,
 .movie-onshow-container
 	display flex
@@ -311,31 +355,31 @@ export default {
 		& .star_10,
 		& .star_10full
 			display inline-block
-			width 5em
-			height 0.8em
+			width 4.5em
+			height 0.78em
 			background url('../../assets/star_rating.png') no-repeat center
 		& .star_1
-			background-position center -7.85em
+			background-position left -7.85em
 		& .star_2
-			background-position center -7.1em
+			background-position left -7.1em
 		& .star_3
-			background-position center -6.3em
+			background-position left -6.3em
 		& .star_4
-			background-position center -5.5em
+			background-position left -5.5em
 		& .star_5
-			background-position center -4.75em
+			background-position left -4.75em
 		& .star_6
-			background-position center -3.95em
+			background-position left -3.95em
 		& .star_7
-			background-position center -3.15em
+			background-position left -3.15em
 		& .star_8
-			background-position center -2.35em
+			background-position left -2.35em
 		& .star_9
-			background-position center -1.6em
+			background-position left -1.6em
 		& .star_10
-			background-position center -0.8em
+			background-position left -0.8em
 		& .star_10full
-			background-position center 0
+			background-position left 0
 .isshown
 	display block !important
 .ishidden
