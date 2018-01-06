@@ -246,19 +246,11 @@ export default {
 		},
 		searchMovie: function() {
 			this.changeSearchType();
-			this.$axios({
-				url: '/douban_api/movie/search',
-				method: 'get',
-				params: this.searchParams
-			}).then(resp => {
-				if(this.searchType) {
-					this.$router.push({path: `/douban/movie_search/keywords/${this.keywords}`});
-				} else {
-					this.$router.push({path: `/douban/movie_search/tag/${this.keywords}`});
-				}
-			}).catch(error => {
-				console.log(error);
-			});
+			if(this.searchType === '1') {
+				this.$router.push({path: `/douban/movie_search/keywords=${this.keywords}`});
+			} else {
+				this.$router.push({path: `/douban/movie_search/tag=${this.keywords}`});
+			}
 		}
 	}
 }

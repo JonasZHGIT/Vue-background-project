@@ -1,5 +1,5 @@
 <template>
-	<div class="movie-search-container">
+	<div class="movie-search-container" v-loading="loading">
 		<el-row>
 		<el-col class="movie-search" :span="14">
 			<el-input class="movie-search-input" placeholder="影片搜索" v-model="keywords" @keyup.enter.native="searchMovie">
@@ -26,42 +26,28 @@
 				</div>
 			</div>
 		</div>
+		<el-col :offset="16">
+			<el-button type="text" @click="toFirst">首页</el-button>
+			<el-button type="text" :disabled="start === 0" @click="toPrevious">上一页</el-button>
+			<el-button type="text" :disabled="end" @click="toNext">下一页</el-button>
+		</el-col>
 	</div>
 </template>
 
 <script>
 export default {
 	created: function() {
-		console.log("id: " + this.id);
-		this.$axios({
-			url: '/douban_api/movie/search',
-			method: 'get',
-			params: {
-				q: this.id
-			}
-		}).then(resp => {
-			this.results = [...resp.data.subjects];
-			this.results.forEach((e, i) => {
-				console.log(e);
-				if(e.rating.average === 0) {
-					e.starRate = '';
-					e.rating.average = '暂无评分';
-				} else {
-					e.starRate = this.defineStar(e.rating.average);
-				}
-				e.rating.average = (e.rating.average + '').length === 1?e.rating.average + '.0':e.rating.average;
-			});
-			console.log(resp);
-		}).catch(error => {
-			console.log(error);
-		})
+		this.getResult();
 	},
 	data() {
 		return {
-			id: this.$route.params.id,
+			id: this.$route.params.id.split("=")[1],
+			start: 0,
+			end: false,
 			keywords: '',
 			searchType: '1',
-			results: []
+			results: [],
+			loading: true
 		}
 	},
 	methods: {
@@ -70,15 +56,47 @@ export default {
 		},
 		searchMovie: function() {
 			this.changeSearchType();
+			if(this.searchType === '1') {
+				this.$router.push({path: `/douban/movie_search/keywords=${this.keywords}`});
+			} else {
+				this.$router.push({path: `/douban/movie_search/tag=${this.keywords}`});
+			}
+			this.$router.go(0);
+		},
+		getResult: function() {
+			let params = {
+				count: 10,
+				start: this.start
+			};
+			this.loading = true;
+			this.result = [];
+			if(this.$route.params.id.split("=")[0] === 'tag') {
+				params.tag = this.id;
+			} else {
+				params.q = this.id;
+			}
 			this.$axios({
 				url: '/douban_api/movie/search',
 				method: 'get',
-				params: this.searchParams
+				params: params
 			}).then(resp => {
-				if(this.searchType) {
-					this.$router.push({path: `/movie_search/keywords/${this.keywords}`});
+				this.results = [...resp.data.subjects];
+				if(this.results.length != 0) {
+					this.end = false;
+					this.results.forEach((e, i) => {
+						if(e.rating.average === 0) {
+							e.starRate = '';
+							e.rating.average = '暂无评分';
+						} else {
+							e.starRate = this.defineStar(e.rating.average);
+						}
+						e.rating.average = (e.rating.average + '').length === 1?e.rating.average + '.0':e.rating.average;
+						this.loading = false;
+					});
 				} else {
-					this.$router.push({path: `/movie_search/tag/${this.keywords}`});
+					this.end = true;
+					this.showMsg();
+					this.loading = false;
 				}
 			}).catch(error => {
 				console.log(error);
@@ -114,6 +132,23 @@ export default {
 		},
 		toBack() {
 			this.$router.go(-1);
+		},
+		toFirst() {
+			this.$router.go(0);
+		},
+		toPrevious() {
+			this.start -= 10;
+			this.getResult();
+		},
+		toNext() {
+			this.start += 10;
+			this.getResult();
+		},
+		showMsg() {
+			this.$notify({
+        message: '( ⊙ o ⊙ )啊！没有更多结果了！',
+        position: 'bottom-right'
+      });
 		}
 	}
 }
