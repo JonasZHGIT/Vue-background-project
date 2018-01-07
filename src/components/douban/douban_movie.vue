@@ -2,7 +2,7 @@
 	<div v-loading="loading" :class="{'movie-loading': loading}">
 		<div class="movie-container"v-if="!loading">
 			<div class="movie-onshow-container">
-				<el-col class="movie-search" :offset="10">
+				<el-col class="movie-search" :offset="10" :span="14">
 					<el-input class="movie-search-input" placeholder="影片搜索" v-model="keywords" @keyup.enter.native="searchMovie">
 						<el-select v-model="searchType" slot="prepend" class="movie-search-select" placeholder="请选择">
 							<el-option value="1" label="关键字搜索"></el-option>

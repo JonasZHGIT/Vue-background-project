@@ -1,7 +1,7 @@
 <template>
 	<div class="movie-search-container" v-loading="loading">
 		<el-row>
-		<el-col class="movie-search">
+		<el-col class="movie-search" :span="15">
 			<el-input class="movie-search-input" placeholder="书籍搜索" v-model="keywords" @keyup.enter.native="getResult(0)">
 				<el-select v-model="searchType" slot="prepend" class="movie-search-select" placeholder="请选择">
 					<el-option value="1" label="关键字搜索"></el-option>
