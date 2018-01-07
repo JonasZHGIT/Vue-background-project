@@ -13,6 +13,8 @@ import Hidden from '@/components/other/hidden.vue';
 import Movie from '@/components/douban/douban_movie.vue';
 import MovieDetail from '@/components/douban/douban_movie_detail.vue';
 import MovieSearchKeywords from '@/components/douban/douban_movie_search_keywords.vue';
+import BookSearch from '@/components/douban/douban_book_search.vue';
+import BookDetail from '@/components/douban/douban_book_detail.vue';
 
 let oAuth = new OAuth(); 
 
@@ -28,6 +30,8 @@ const router = new Router({
         	{ path: '/douban/movie', component: Movie },
             { path: '/douban/movie_detail/:id', component: MovieDetail },
             { path: '/douban/movie_search/:id', component: MovieSearchKeywords },
+            { path: '/douban/book_search', component: BookSearch },
+            { path: '/douban/book_detail/:id', component: BookDetail },
         	{ path: '/hidden', component: Hidden }
         ]}, 
         { path: '/loginnav', component: Loginnav, redirect: '/login', children: [

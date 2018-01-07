@@ -4,7 +4,7 @@
 			<div class="movie-onshow-container">
 				<el-col class="movie-search" :offset="10">
 					<el-input class="movie-search-input" placeholder="影片搜索" v-model="keywords" @keyup.enter.native="searchMovie">
-						<el-select v-model="searchType" slot="prepend" class="movie-search-select" @change="changeSearchType" placeholder="请选择">
+						<el-select v-model="searchType" slot="prepend" class="movie-search-select" placeholder="请选择">
 							<el-option value="1" label="关键字搜索"></el-option>
 							<el-option value="2" label="标签搜索"></el-option>
 						</el-select>
@@ -101,7 +101,6 @@ export default {
 		return {
 			loading: true,
 			searchType: '1',
-			searchParams: '',
 			keywords: '',
 			totalPage: '',
 			totalPageUSA: '',
@@ -241,11 +240,7 @@ export default {
 		showPopUSA: function(n) {
 			this.showStatusUSA = n;
 		},
-		changeSearchType: function() {
-			this.searchParams = this.searchType === '1'?{q: this.keywords}:{tag: this.keywords}; 
-		},
 		searchMovie: function() {
-			this.changeSearchType();
 			if(this.searchType === '1') {
 				this.$router.push({path: `/douban/movie_search/keywords=${this.keywords}`});
 			} else {

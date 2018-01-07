@@ -3,7 +3,7 @@
 		<div v-if="!loading">
 			<h1>{{message.title}}<span class="movie-detail-year">&nbsp;({{message.year}})</span></h1>
 			<div class="movie-detail-message">
-				<img :src="message.images.small" class="movie-detail-image fl" />
+				<img :src="message.images.large" class="movie-detail-image" />
 				<div class="movie-detail-content">
 					<p>导演: <span v-for="(director, index) in message.directors" :key="index">{{director.name}}&nbsp;</span></p>
 					<p>主演: <span v-for="(cast, index) in message.casts" :key="index">{{cast.name}}&nbsp;</span></p>
@@ -45,21 +45,6 @@ export default {
 		},
 		toBack() {
 			this.$router.go(-1);
-		},
-		changeSearchType: function() {
-			this.searchParams = this.searchType === '1'?{q: this.keywords}:{tag: this.keywords}; 
-		},
-		searchMovie: function() {
-			this.changeSearchType();
-			this.$axios({
-				url: '/douban_api/movie/search',
-				method: 'get',
-				params: this.searchParams
-			}).then(resp => {
-				console.log(resp);
-			}).catch(error => {
-				console.log(error);
-			});
 		}
 	}
 }
