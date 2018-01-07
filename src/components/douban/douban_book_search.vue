@@ -60,7 +60,7 @@ export default {
 			} else {
 				params.q = this.keywords;
 			}
-			this.$axios({
+			this.$douban({
 				url: '/douban_api/book/search',
 				method: 'get',
 				params: params

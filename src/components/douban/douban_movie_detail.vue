@@ -35,7 +35,7 @@ export default {
 	},
 	methods: {
 		getMessage() {
-			this.$axios.get(`/douban_api/movie/subject/${this.id}`)
+			this.$douban.get(`/douban_api/movie/subject/${this.id}`)
 			.then(resp => {
 				this.message = resp.data;
 				this.loading = false;

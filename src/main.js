@@ -10,21 +10,25 @@ import OAuth from './oauth';
 let oAuth = new OAuth();
 Vue.prototype.$oauth = oAuth;
 
-const axios = Axios.create({
-	// ajax请求baseurl修改
-	// baseURL: process.env.API_ROOT
+const douban_axios = Axios.create({
 	baseURL: ''
 });
+const axios = Axios.create({
+	// ajax请求baseurl修改
+	baseURL: process.env.API_ROOT
+	// baseURL: ''
+});
 // 后台页面浏览认证
-// axios.interceptors.request.use(function (config) {
-//     config.headers.common['Authorization'] = oAuth.getAuthHeaders();
-//     return config;
-// }, function (error) {
-//     console.log(error);
-//     return Promise.reject(error);
-// });
+axios.interceptors.request.use(function (config) {
+    config.headers.common['Authorization'] = oAuth.getAuthHeaders();
+    return config;
+}, function (error) {
+    console.log(error);
+    return Promise.reject(error);
+});
 
 Vue.prototype.$axios = axios;
+Vue.prototype.$douban = douban_axios;
 
 /* eslint-disable no-new */
 new Vue({

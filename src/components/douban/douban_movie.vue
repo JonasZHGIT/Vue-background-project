@@ -115,7 +115,7 @@ export default {
 	},
 	methods: {
 		getOnShowing: function() {
-			this.$axios.get('/douban_api/movie/in_theaters?city=上海')
+			this.$douban.get('/douban_api/movie/in_theaters?city=上海')
 			.then(resp => {
 				console.log(resp);
 				let res = resp.data.subjects;
@@ -146,7 +146,7 @@ export default {
 			});
 		},
 		getTop: function() {
-			this.$axios.get(`/douban_api/movie/top250?start=0&count=60`)
+			this.$douban.get(`/douban_api/movie/top250?start=0&count=60`)
 			.then(resp => {
 				let res = resp.data.subjects;
 				for (let i=0; i<res.length; i++) {
@@ -174,7 +174,7 @@ export default {
 			});
 		},
 		getUSA: function() {
-			this.$axios.get('/douban_api/movie/us_box')
+			this.$douban.get('/douban_api/movie/us_box')
 			.then(resp => {
 				let res = resp.data.subjects;
 				this.totalPageUSA = Math.ceil(res.length / 6);

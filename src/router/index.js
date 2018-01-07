@@ -41,23 +41,23 @@ const router = new Router({
 });
 
 // 路由跳转认证控制
-// router.beforeEach((to, from, next) => {
-// 	let allowAnonymous = false;
-// 	if(to.name === 'loginPage' && oAuth.isAuthenticated()) {
-// 		console.log("authenticated");
-// 		return next({
-//             path: '/'
-//         });
-// 	} else if(!to.meta.allowAnonymous && oAuth.isGuest()) {
-// 		console.log("Guest");
-// 		return next({
-//             path: '/login',
-//             query: {
-//                 redirect: to.fullPath // 登录成功后返回原访问页面
-//             }
-//         });
-// 	}
-// 	return next();
-// });
+router.beforeEach((to, from, next) => {
+	let allowAnonymous = false;
+	if(to.name === 'loginPage' && oAuth.isAuthenticated()) {
+		console.log("authenticated");
+		return next({
+            path: '/'
+        });
+	} else if(!to.meta.allowAnonymous && oAuth.isGuest()) {
+		console.log("Guest");
+		return next({
+            path: '/login',
+            query: {
+                redirect: to.fullPath // 登录成功后返回原访问页面
+            }
+        });
+	}
+	return next();
+});
 
 export default router;

@@ -44,7 +44,7 @@ export default {
 	},
 	methods: {
 		getMessage() {
-			this.$axios.get(`/douban_api/book/${this.id}`)
+			this.$douban.get(`/douban_api/book/${this.id}`)
 			.then(resp => {
 				console.log(resp);
 				this.message = resp.data;

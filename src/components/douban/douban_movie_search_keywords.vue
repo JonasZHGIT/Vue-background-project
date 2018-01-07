@@ -71,7 +71,7 @@ export default {
 			} else {
 				params.q = this.id;
 			}
-			this.$axios({
+			this.$douban({
 				url: '/douban_api/movie/search',
 				method: 'get',
 				params: params
